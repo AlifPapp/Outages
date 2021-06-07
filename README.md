@@ -5,6 +5,8 @@
 * Download [discord.py](https://pypi.org/project/discord.py/)
 * Run these commands to instal the required modules:
   * `py -3 -m pip install -U discord.py[voice]` Run in CMDPromt
+* Heroku Setup:
+  * `py -m pip freeze > requirements.txt` Run in vsc terminal
 
 **Links:**
 * TimelyBot:
