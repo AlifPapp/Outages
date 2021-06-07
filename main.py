@@ -51,13 +51,6 @@ async def on_connect():
 @client.event
 async def on_disconnect():
     print("Bot has disconnected")
-
-    channel = client.get_channel(845586893789986857)
-    em = discord.Embed(title = "TimelyBot has awoken!",
-                       description = "But for how long?",
-                       color = client.Blue,
-                       timestamp=datetime.utcnow())
-    await channel.send(embed = em)
 #####################################################################################################################################
 ########################################################## C O M M A N D S ##########################################################
 #####################################################################################################################################
