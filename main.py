@@ -149,6 +149,6 @@ async def sendstatus(status):
     return
 
 #####################################################################################################################################
-token = open("token.txt","r").readline()
-client.run(token.strip())
-#client.run(str(os.environ.get('BOT_TOKEN')))
+#token = open("token.txt","r").readline()
+#client.run(token.strip())
+client.run(str(os.environ.get('BOT_TOKEN')))
