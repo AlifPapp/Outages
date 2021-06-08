@@ -31,9 +31,9 @@ client.Green = int("3BA55C" , 16)
 client.Red = int("D72D42" , 16)
 client.Blue = int("7289DA" , 16)
 
-MongoClientLink = open("MongoClient.txt","r").readline()
-cluster = MongoClient(MongoClientLink.strip(), ssl_cert_reqs=ssl.CERT_NONE)
-#cluster = MongoClient(str(os.environ.get('MONGO_LINK')), ssl_cert_reqs=ssl.CERT_NONE)
+#MongoClientLink = open("MongoClient.txt","r").readline()
+#cluster = MongoClient(MongoClientLink.strip(), ssl_cert_reqs=ssl.CERT_NONE)
+cluster = MongoClient(str(os.environ.get('MONGO_LINK')), ssl_cert_reqs=ssl.CERT_NONE)
 client.botstatus = cluster["bot"]["status"]
 #####################################################################################################################################
 ############################################################### EVENTS ##############################################################
@@ -155,6 +155,6 @@ async def sendstatus(status):
     return
 
 #####################################################################################################################################
-token = open("token.txt","r").readline()
-client.run(token.strip())
-#client.run(str(os.environ.get('BOT_TOKEN')))
+#token = open("token.txt","r").readline()
+#client.run(token.strip())
+client.run(str(os.environ.get('BOT_TOKEN')))
