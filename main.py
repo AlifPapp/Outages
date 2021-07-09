@@ -41,10 +41,10 @@ async def on_ready():
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Timely's Status"))
     print('Main.py Loaded!')
     
-    client.check_user = 416508283528937472
+    client.check_user = 836198930873057290
     targetguild = client.get_guild(835851709884530738)
     client.member = targetguild.get_member(client.check_user)
-    client.channel = 836460335279112223
+    client.channel = 845586893789986857
     
     print('Watching_user:', client.member)
     print('Guild:', targetguild.name)
