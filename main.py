@@ -12,7 +12,7 @@ from pymongo import MongoClient
 defaultprefix = "ts!"
 
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix = commands.when_mentioned_or(defaultprefix),
+client = commands.Bot(command_prefix = commands.when_mentioned_or(defaultprefix, "TS!"),
                       case_insensitive=True,
                       intents = intents)
 client.remove_command('help')
@@ -142,12 +142,12 @@ async def Loop_CheckStatus():
 async def sendstatus(status): #Send message
     channel = client.get_channel(client.channel)
     if status == "online":
-        em = discord.Embed(title = "<:online_status:851753067611553803> TimelyBot has awoken!",
+        em = discord.Embed(title = "<:online_status:863387938439299072> TimelyBot has awoken!",
                            description = "But for how long?",
                            color = client.Blue,
                            timestamp=datetime.utcnow())
     if status == "offline":
-        em = discord.Embed(title = "<:offline_status:851753226407641098> TimelyBot is taking a nap!",
+        em = discord.Embed(title = "<:offline_status:863388067691888651> TimelyBot is taking a nap!",
                            description = "The developers are trying their best to wake it up.",
                            color = client.Red,
                            timestamp=datetime.utcnow())
