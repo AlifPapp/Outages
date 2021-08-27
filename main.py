@@ -6,8 +6,12 @@ from datetime import datetime
 import os
 import psutil
 
+import dns
 import ssl
 from pymongo import MongoClient
+
+import keep_alive
+keep_alive.keep_alive()
 
 defaultprefix = "ts!"
 
@@ -108,9 +112,9 @@ async def botinfo(ctx):
             f"{int(memory_used/1000000)}/{int(memory_total/1000000)} MB ({memory_percent}%)",
             f"[discord.py](https://discordpy.readthedocs.io/en/latest/) {discord.__version__}",
             f"[MongoDB](https://www.mongodb.com/)",
-            f"[Heroku](https://dashboard.heroku.com/)"]
+            f"[Replit](https://replit.com/)"]
 
-    fields = [(":file_folder:Info",f"Owner: {client.user.mention}\nCreated: {Vars[0]}\nGuilds: {Vars[1]}\nUsers: {users_sum}",False),
+    fields = [("<:folder:874116455409528904> Info",f"Owner: {client.user.mention}\nCreated: {Vars[0]}\nGuilds: {Vars[1]}\nUsers: {users_sum}",False),
               (":file_cabinet:System",f"CPU: {cpu_percent}%\nMemory: {Vars[2]}\nFramework: {Vars[3]}\nDataBase: {Vars[4]}\nHosted on: {Vars[5]}",True)]
 
     for name, value, inline in fields:
