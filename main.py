@@ -127,36 +127,38 @@ async def botinfo(ctx):
 #####################################################################################################################################
 ####################################################### C H E C K  &  S E N D #######################################################
 #####################################################################################################################################
-@tasks.loop(seconds = 10) # repeat after every 10 seconds
+@tasks.loop(seconds = 5) # repeat after every 5 seconds
 async def Loop_CheckStatus():
     #Check for change in status
     botstatus = client.botstatus.find_one({"bot_id": client.check_user})
     status = botstatus["status"]
     if client.member.status == discord.Status.offline:
-        if status == "online":
+        if status == "online": 
             await sendstatus("offline")
-            client.botstatus.update_one({"bot_id":client.check_user},{"$set":{"status":"offline"}})
     else:
-        if status == "offline":
+        if status == "offline": 
             await sendstatus("online")
-            client.botstatus.update_one({"bot_id":client.check_user},{"$set":{"status":"online"}})
     return
 
-
 async def sendstatus(status): #Send message
+    if status == "offline":
+        await asyncio.sleep(60)
+        if client.member.status != discord.Status.offline:
+            return
+    
     channel = client.get_channel(client.channel)
     if status == "online":
+        client.botstatus.update_one({"bot_id":client.check_user},{"$set":{"status":"online"}})
         em = discord.Embed(title = "<:online_status:863387938439299072> TimelyBot has awoken!",
                            description = "But for how long?",
                            color = client.Blue,
                            timestamp=datetime.utcnow())
     if status == "offline":
+        client.botstatus.update_one({"bot_id":client.check_user},{"$set":{"status":"offline"}})
         em = discord.Embed(title = "<:offline_status:863388067691888651> TimelyBot is taking a nap!",
                            description = "The developers are trying their best to wake it up.",
                            color = client.Red,
                            timestamp=datetime.utcnow())
-        
-    #em.set_author(name=f"{client.member.name}", icon_url = client.member.avatar_url)
     await channel.send(embed = em)
     return
 
