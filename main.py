@@ -6,6 +6,8 @@ import discord
 from discord.ext import commands, tasks
 from pymongo import MongoClient
 
+from cogs.functions import user_avatar_url
+
 #import keep_alive
 #keep_alive.keep_alive()
 
@@ -21,17 +23,23 @@ class Bot(commands.Bot):
                          status=discord.Status.idle,
                          activity=discord.Activity(type=discord.ActivityType.watching, name="Zseni's bots"))
         self.remove_command('help')
-        
+        self.serverprefix = "@Outages "
+
+        with open("./json/help.json","r") as f: 
+            self.helpfile = json.load(f)
+            self.helpcmd = [] # alphabetical order list of commands
+            for x in self.helpfile: 
+                self.helpcmd.append(x)
+            self.helpcmd = sorted(self.helpcmd)
+
         if botishosted == True:
             self.Secrets = json.loads(os.environ.get('Secrets'))
         else: 
-            with open("./Secrets.json","r") as f: 
+            with open("./json/Secrets.json","r") as f: 
                 self.Secrets = json.load(f)
 
         self.owner_id = 377418029706772480
         self.githubrepo = "https://github.com/Zseni051/Outages"
-        self.outages_channel = 1008524900442570822
-        self.ping_users = f"<@!{self.owner_id}>"
 
         self.mongodb = MongoClient(self.Secrets["MongoDB"])
 
@@ -41,7 +49,9 @@ class Bot(commands.Bot):
         self.Red = int("D72D42" , 16)
         self.Blue = int("7289DA" , 16)
 
-        self.load_extension(f'cmnds')
+        for filename in os.listdir('cogs'):
+            if filename.endswith('.py'):
+                self.load_extension(f'cogs.{filename[:-3]}')
         
     async def on_ready(self):
         print('Logged in as')
@@ -81,10 +91,13 @@ async def Loop_CheckStatus():
     return
 
 async def sendstatus(user, status):
-    guild = bot.get_guild(debug_guilds[0])
-    channel = guild.get_channel(bot.outages_channel)
     cluster = bot.mongodb["Outages"]["Users"]
     cluster.update_one({"id": user}, {"$set":{"status": status}})
+    member = cluster.find_one({"id": user})
+    ping_msg = member["ping"]
+    guild = bot.get_guild(debug_guilds[0])
+    channel = guild.get_channel(member["channel"])
+    
     user = await bot.fetch_user(user)
     if status == "online":
         em = discord.Embed(title = f"**{user.name}** is now online",
@@ -96,17 +109,12 @@ async def sendstatus(user, status):
                            color = bot.Red)
     em.set_thumbnail(url = user_avatar_url(user))
     await channel.send(embed = em)
-    await asyncio.sleep(1)
-    ping_msg = await channel.send(f"**Pinged:** {bot.ping_users}")
-    await asyncio.sleep(1)
-    await ping_msg.delete()
+    
+    if ping_msg.isspace() == False:
+        await asyncio.sleep(1)
+        ping_msg = await channel.send(f"**Pinged:** {ping_msg}")
+        await asyncio.sleep(1)
+        await ping_msg.delete()
     return
-
-def user_avatar_url(user):
-    try: 
-        user_avatar_url = user.avatar.url
-    except: 
-        user_avatar_url = "https://cdn.discordapp.com/embed/avatars/0.png"
-    return user_avatar_url
 #####################################################################################################################################
 bot.run(bot.Secrets["Token"])
