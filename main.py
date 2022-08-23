@@ -1,168 +1,112 @@
-import discord
-from discord import client
-from discord.ext import commands, tasks
-
-from datetime import datetime
+import asyncio
+import json
 import os
-import psutil
 
-import dns
-import ssl
+import discord
+from discord.ext import commands, tasks
 from pymongo import MongoClient
 
-import keep_alive
-keep_alive.keep_alive()
+#import keep_alive
+#keep_alive.keep_alive()
 
-defaultprefix = "ts!"
+debug_guilds = [420513434996572191]
+botishosted = False
 
-intents = discord.Intents.all()
-client = commands.Bot(command_prefix = commands.when_mentioned_or(defaultprefix, "TS!"),
-                      case_insensitive=True,
-                      intents = intents)
-client.remove_command('help')
+class Bot(commands.Bot):
+    def __init__(self):
+        super().__init__(debug_guilds=debug_guilds,
+                         command_prefix=commands.when_mentioned,
+                         case_insensitive=True,
+                         intents=discord.Intents.all(),
+                         status=discord.Status.idle,
+                         activity=discord.Activity(type=discord.ActivityType.watching, name="Zseni's bots"))
+        self.remove_command('help')
+        
+        if botishosted == True:
+            self.Secrets = json.loads(os.environ.get('Secrets'))
+        else: 
+            with open("./Secrets.json","r") as f: 
+                self.Secrets = json.load(f)
 
-client.developerid = 416508283528937472, 0
+        self.owner_id = 377418029706772480
+        self.githubrepo = "https://github.com/Zseni051/Outages"
+        self.outages_channel = 1008524900442570822
+        self.ping_users = f"<@!{self.owner_id}>"
 
-client.Yellow = int("FFB744" , 16)
-client.Black = int("000000" , 16)
-client.Green = int("2EC550" , 16)
-client.Red = int("D72D42" , 16)
-client.Blue = int("7289DA" , 16)
+        self.mongodb = MongoClient(self.Secrets["MongoDB"])
 
-#MongoClientLink = open("MongoClient.txt","r").readline()
-#cluster = MongoClient(MongoClientLink.strip(), ssl_cert_reqs=ssl.CERT_NONE)
-cluster = MongoClient(str(os.environ.get('MONGO_LINK')), ssl_cert_reqs=ssl.CERT_NONE)
-client.botstatus = cluster["bot"]["status"]
-#####################################################################################################################################
-############################################################### EVENTS ##############################################################
-#####################################################################################################################################
-@client.event
-async def on_ready():
-    print('Logged in as')
-    print('Name:', client.user.name)
-    print('ID:', client.user.id)
-    print('------')
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Timely's Status"))
-    print('Main.py Loaded!')
-    
-    client.check_user = 836198930873057290
-    targetguild = client.get_guild(835851709884530738)
-    client.member = targetguild.get_member(client.check_user)
-    client.channel = 845586893789986857
-    
-    print('Watching_user:', client.member)
-    print('Guild:', targetguild.name)
-    print('Channel:', client.channel)
+        self.Yellow = int("FFB744" , 16)
+        self.Black = int("000000" , 16)
+        self.Green = int("2EC550" , 16)
+        self.Red = int("D72D42" , 16)
+        self.Blue = int("7289DA" , 16)
 
-    #Insert if None
-    botstatus = client.botstatus.find_one({"bot_id": client.check_user})
-    if botstatus is None:
-        status = {"bot_id": client.check_user, "status": "online"}
-        client.botstatus.insert_one(status)
+        self.load_extension(f'cmnds')
+        
+    async def on_ready(self):
+        print('Logged in as')
+        print('Name:', self.user.name)
+        print('ID:', self.user.id)
+        print('------')
+        print('main.py Loaded!')
 
-    Loop_CheckStatus.start()
+        Loop_CheckStatus.start()
 
-@client.event
-async def on_connect():
-    print("Bot has connected")
+    async def on_connect(self):
+        print("Bot has connected")
+        await self.sync_commands(force=True)
 
-@client.event
-async def on_disconnect():
-    print("Bot has disconnected")
-#####################################################################################################################################
-########################################################## C O M M A N D S ##########################################################
-#####################################################################################################################################
-# thelp
-@client.command()
-async def help(ctx):
-    channel = client.get_channel(client.channel)
+    async def on_disconnect(self):
+        print("Bot has disconnected")
 
-    em = discord.Embed(title = "Hi, I'm TimelyStatus",
-                           description = f"I update you on whether <@!{client.check_user}> is currently up or down in {channel.mention}\nFeel free to follow this channel to get updates in your own server.",
-                           colour = client.Blue)
-    em.add_field(name="Prefix",value=f"**1:** {client.user.mention}\n**2:** `{defaultprefix}`")
-    em.add_field(name="Commands",value=f"**1:** `{defaultprefix}help`\n**2:** `{defaultprefix}botinfo`")
-    
-    if client.member.status == discord.Status.offline:
-        em.set_footer(text="Timely is offline")
-    else: 
-        em.set_footer(text="Timely is online")
-    em.timestamp = datetime.utcnow()
-    await ctx.send(embed = em)
+if __name__ == "__main__":
+    bot = Bot()
 
-
-# tbotinfo
-@client.command(aliases=['bi'])
-async def botinfo(ctx):
-    memory_total = psutil.virtual_memory()._asdict()["total"]
-    memory_used = psutil.virtual_memory()._asdict()["used"]
-    memory_percent = psutil.virtual_memory()._asdict()["percent"]
-    cpu_percent = psutil.cpu_percent()
-
-    users_sum = 0
-    for x in client.guilds:
-        users_sum += len(x.members)
-
-    em = discord.Embed(title=f"Bot Info - {client.user}",
-              colour=client.Blue)
-    em.set_thumbnail(url=client.user.avatar_url)
-
-    Vars = [client.user.created_at.strftime("%d/%m/%Y"),
-            len(client.guilds),
-            f"{int(memory_used/1000000)}/{int(memory_total/1000000)} MB ({memory_percent}%)",
-            f"[discord.py](https://discordpy.readthedocs.io/en/latest/) {discord.__version__}",
-            f"[MongoDB](https://www.mongodb.com/)",
-            f"[Replit](https://replit.com/)"]
-
-    fields = [("<:folder:874116455409528904> Info",f"Owner: {client.user.mention}\nCreated: {Vars[0]}\nGuilds: {Vars[1]}\nUsers: {users_sum}",False),
-              (":file_cabinet:System",f"CPU: {cpu_percent}%\nMemory: {Vars[2]}\nFramework: {Vars[3]}\nDataBase: {Vars[4]}\nHosted on: {Vars[5]}",True)]
-
-    for name, value, inline in fields:
-        em.add_field(name=name, value=value, inline=inline)
-
-    em.set_footer(text=f"ID: {client.user.id}")
-    em.timestamp = datetime.utcnow()
-    await ctx.reply(embed = em)
-
-#####################################################################################################################################
-####################################################### C H E C K  &  S E N D #######################################################
-#####################################################################################################################################
-@tasks.loop(seconds = 5) # repeat after every 5 seconds
+@tasks.loop(seconds = 5) # repeat every 5 seconds
 async def Loop_CheckStatus():
-    #Check for change in status
-    botstatus = client.botstatus.find_one({"bot_id": client.check_user})
-    status = botstatus["status"]
-    if client.member.status == discord.Status.offline:
-        if status == "online": 
-            await sendstatus("offline")
-    else:
-        if status == "offline": 
-            await sendstatus("online")
+    cluster = bot.mongodb["Outages"]["Users"]
+    for userdata in cluster.find():
+        guild = bot.get_guild(debug_guilds[0])
+        member = guild.get_member(int(userdata["id"]))
+        if member == None:
+            print(f"{int(userdata['id'])} is not in the guild")
+            continue
+        user_status = userdata["status"]
+        if member.status == discord.Status.offline:
+            if user_status == "online":
+                await sendstatus(userdata["id"], "offline")
+        else:
+            if user_status == "offline": 
+                await sendstatus(userdata["id"], "online")
     return
 
-async def sendstatus(status): #Send message
-    if status == "offline":
-        await asyncio.sleep(60)
-        if client.member.status != discord.Status.offline:
-            return
-    
-    channel = client.get_channel(client.channel)
+async def sendstatus(user, status):
+    guild = bot.get_guild(debug_guilds[0])
+    channel = guild.get_channel(bot.outages_channel)
+    cluster = bot.mongodb["Outages"]["Users"]
+    cluster.update_one({"id": user}, {"$set":{"status": status}})
+    user = await bot.fetch_user(user)
     if status == "online":
-        client.botstatus.update_one({"bot_id":client.check_user},{"$set":{"status":"online"}})
-        em = discord.Embed(title = "<:online_status:863387938439299072> TimelyBot has awoken!",
-                           description = "But for how long?",
-                           color = client.Blue,
-                           timestamp=datetime.utcnow())
-    if status == "offline":
-        client.botstatus.update_one({"bot_id":client.check_user},{"$set":{"status":"offline"}})
-        em = discord.Embed(title = "<:offline_status:863388067691888651> TimelyBot is taking a nap!",
-                           description = "The developers are trying their best to wake it up.",
-                           color = client.Red,
-                           timestamp=datetime.utcnow())
+        em = discord.Embed(title = f"**{user.name}** is now online",
+                           description = "",
+                           color = bot.Blue)
+    elif status == "offline":
+        em = discord.Embed(title = f"**{user.name}** is now offline",
+                           description = "",
+                           color = bot.Red)
+    em.set_thumbnail(url = user_avatar_url(user))
     await channel.send(embed = em)
+    await asyncio.sleep(1)
+    ping_msg = await channel.send(f"**Pinged:** {bot.ping_users}")
+    await asyncio.sleep(1)
+    await ping_msg.delete()
     return
 
+def user_avatar_url(user):
+    try: 
+        user_avatar_url = user.avatar.url
+    except: 
+        user_avatar_url = "https://cdn.discordapp.com/embed/avatars/0.png"
+    return user_avatar_url
 #####################################################################################################################################
-#token = open("token.txt","r").readline()
-#client.run(token.strip())
-client.run(str(os.environ.get('BOT_TOKEN')))
+bot.run(bot.Secrets["Token"])
