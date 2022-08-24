@@ -15,18 +15,26 @@ Monitors multiple bots/users status, and notifies when its up or down.
 <br>Note: Designed to only function in 1 guild
 
 ### Online message
+<img src="https://i.imgur.com/1U3fceR.png">
 
 ### Offline message
+<img src="https://i.imgur.com/yQjAt4P.png">
 
 ### Custom notification message
+- Bot will send a message then delete it, include who to ping here.
+<img src="https://i.imgur.com/aQ0Pkpf.png">
 
-### Per Bot specific channel
+### Per bot specific channel
+<img src="https://i.imgur.com/N7eYrkr.png">
 
 ### Add bot to be monitored
+<img src="https://i.imgur.com/oaVlXru.png">
 
 ### Remove bot from being monitored
+<img src="https://i.imgur.com/5NwpFSG.png">
 
 ### View bot's system statisics
+<img src="https://i.imgur.com/jSjYqXA.png">
 
 ## Setup
 1. Create a mongodb database named ["Outages"]["Users"]
