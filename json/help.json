@@ -22,8 +22,8 @@
         "cooldown": "False"},
     "botinfo":
         {"link": "https://github.com/Zseni051/Outages/blob/main/README.md#view-bots-system-statisics",
-        "desc_short": "Gives bots system statisics.", 
-        "desc_long": "Gives bots system statisics.",
+        "desc_short": "Gives bot's system statisics.", 
+        "desc_long": "Gives bot's system statisics.",
         "usage": "botinfo",
         "aliases": "bi, info",
         "cooldown": "False"}
