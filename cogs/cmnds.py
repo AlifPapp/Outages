@@ -80,7 +80,7 @@ async def add_cmd(slash, self, ctx, user, channel, msg):
             insert = {
                       "id": user.id, 
                       "status": "online",
-                      "channel": [channel.id],
+                      "channel": channel.id,
                       "ping": msg
                       }
             cluster.insert_one(insert)
