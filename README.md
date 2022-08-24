@@ -33,6 +33,13 @@ Monitors multiple bots/users status, and notifies when its up or down.
 2. Create bot with all intents enabled
 3. Invite the bot with all permisions
 3. Fill out bots Secrets
+4. In main.py change these variables: 
+```python
+debug_guilds = [your guild id]
+self.owner_id = your id
+```
+
+# 
 
 Note: You will need to make slight changes depending where you host it.
 <br>I have it set up to run either on my desktop or on replit.
