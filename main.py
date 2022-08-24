@@ -90,15 +90,27 @@ async def Loop_CheckStatus():
                 await sendstatus(userdata["id"], "online")
     return
 
-async def sendstatus(user, status):
-    cluster = bot.mongodb["Outages"]["Users"]
-    cluster.update_one({"id": user}, {"$set":{"status": status}})
-    member = cluster.find_one({"id": user})
-    ping_msg = member["ping"]
+async def sendstatus(user_id, status):
     guild = bot.get_guild(debug_guilds[0])
-    channel = guild.get_channel(member["channel"])
+    member = guild.get_member(int(user_id))
+    # check if after 60 seconds the user is still offline or online
+    await asyncio.sleep(60)
+    if member.status == discord.Status.offline: 
+        if status == "online":
+            return
+    else: 
+        if status == "offline":
+            return
+
+
+    cluster = bot.mongodb["Outages"]["Users"]
+    cluster.update_one({"id": user_id}, {"$set":{"status": status}})
+    user_data = cluster.find_one({"id": user_id})
+    ping_msg = user_data["ping"]
+    channel = guild.get_channel(user_data["channel"])
     
-    user = await bot.fetch_user(user)
+    
+    user = await bot.fetch_user(user_id)
     if status == "online":
         em = discord.Embed(title = f"**{user.name}** is now online",
                            description = "",
