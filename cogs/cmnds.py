@@ -30,7 +30,7 @@ class cmnds(commands.Cog):
     @commands.command(aliases=cmd_aliases("add"))
     async def add(self, ctx, user: Optional[Member]=None, channel: Optional[discord.TextChannel]=None, *, msg: str=None):
         await add_cmd(False, self, ctx, user, channel, msg)
-    @slash_command(name="add", description=cmd_descshort("botinfo"))
+    @slash_command(name="add", description=cmd_descshort("add"))
     async def add_slash(self, ctx: discord.ApplicationContext, user: discord.User, channel: discord.TextChannel, msg: str=None):
         await add_cmd(True, self, ctx, user, channel, msg)
     
@@ -38,7 +38,7 @@ class cmnds(commands.Cog):
     @commands.command(aliases=cmd_aliases("remove"))
     async def remove(self, ctx, user: Optional[Member]):
         await remove_cmd(False, self, ctx, user)
-    @slash_command(name="remove", description=cmd_descshort("botinfo"))
+    @slash_command(name="remove", description=cmd_descshort("remove"))
     async def remove_slash(self, ctx: discord.ApplicationContext, user: discord.User):
         await remove_cmd(True, self, ctx, user)
 
@@ -46,7 +46,7 @@ class cmnds(commands.Cog):
     @commands.command(aliases=cmd_aliases("list"))
     async def list(self, ctx):
         await list_cmd(False, self, ctx)
-    @slash_command(name="list", description=cmd_descshort("botinfo"))
+    @slash_command(name="list", description=cmd_descshort("list"))
     async def list_slash(self, ctx: discord.ApplicationContext):
         await list_cmd(True, self, ctx)
 
