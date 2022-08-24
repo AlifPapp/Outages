@@ -112,7 +112,7 @@ async def sendstatus(user, status):
     
     if ping_msg.isspace() == False:
         await asyncio.sleep(1)
-        ping_msg = await channel.send(f"**Pinged:** {ping_msg}")
+        ping_msg = await channel.send(ping_msg)
         await asyncio.sleep(1)
         await ping_msg.delete()
     return
