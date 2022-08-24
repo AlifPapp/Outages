@@ -1,27 +1,27 @@
 {
     "add":
-        {"link": "https://www.youtube.com/channel/UCsIaU94p647veKr7sy12wmA",
+        {"link": "https://github.com/Zseni051/Outages/blob/main/README.md#add-bot-to-be-monitored",
         "desc_short": "Add a user to be monitored.", 
         "desc_long": "Add a user to be monitored.",
         "usage": "add <user> <channel> [notify msg]",
         "aliases": "False",
         "cooldown": "False"},
     "remove":
-        {"link": "https://www.youtube.com/channel/UCsIaU94p647veKr7sy12wmA",
+        {"link": "https://github.com/Zseni051/Outages/blob/main/README.md#remove-bot-from-being-monitored",
         "desc_short": "Remove a user from being monitored.", 
         "desc_long": "Remove a user from being monitored.",
         "usage": "remove <user>",
         "aliases": "False",
         "cooldown": "False"},
     "list":
-        {"link": "https://www.youtube.com/channel/UCsIaU94p647veKr7sy12wmA",
+        {"link": "https://github.com/Zseni051/Outages/blob/main/README.md#per-bot-specific-channel",
         "desc_short": "Lists all the users being monitored.", 
         "desc_long": "Lists all the users being monitored.",
         "usage": "list",
         "aliases": "False",
         "cooldown": "False"},
     "botinfo":
-        {"link": "https://www.youtube.com/channel/UCsIaU94p647veKr7sy12wmA",
+        {"link": "https://github.com/Zseni051/Outages/blob/main/README.md#view-bots-system-statisics",
         "desc_short": "Gives bots system statisics.", 
         "desc_long": "Gives bots system statisics.",
         "usage": "botinfo",
