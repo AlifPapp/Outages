@@ -143,7 +143,7 @@ async def help_cmd(slash, self, ctx, command):
         description += f"\n• If you have any questions/queries this is the [Github Repo](self.bot.githubrepo)\n"
 
         for x in self.bot.helpfile: 
-            description += f"\n**[{x}]({self.bot.helpfile[x]['link']})**\n↪️{self.bot.helpfile[x]['desc_short']}"
+            description += f"\n**[{x}]({self.bot.helpfile[x]['link']})**\n- {self.bot.helpfile[x]['desc_short']}"
         em = discord.Embed(title = f"{self.bot.user.name} Help",
                            description = description,
                            colour = self.bot.Blue)
