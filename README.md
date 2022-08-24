@@ -12,7 +12,7 @@
 
 ## Features
 Monitors multiple bots/users status, and notifies when its up or down.
-Note: Designed to only function in 1 guild
+<br>Note: Designed to only function in 1 guild
 
 ### Online message
 
@@ -33,5 +33,8 @@ Note: Designed to only function in 1 guild
 2. Create bot with all intents enabled
 3. Invite the bot with all permisions
 3. Fill out bots Secrets
+
 Note: You will need to make slight changes depending where you host it.
-I have it set up to run either on my desktop or on replit.
+<br>I have it set up to run either on my desktop or on replit.
+
+BTW You can view the bot in action in my discord
