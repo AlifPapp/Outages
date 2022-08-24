@@ -84,7 +84,7 @@ async def add_cmd(slash, self, ctx, user, channel, msg):
                       "ping": msg
                       }
             cluster.insert_one(insert)
-            await response(slash, "reply", ctx, content="Added user to list", mention_author=False)
+            await response(slash, "reply", ctx, content="Added user to list of users being monitored", mention_author=False)
         else:
             await response(slash, "reply", ctx, content=f"{user.mention} is already being monitored", mention_author=False)
     else:
